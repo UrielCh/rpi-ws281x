@@ -31,5 +31,9 @@
   "dependencies": {
     "nan": "^2.14.0"
   },
-  "homepage": "https://github.com/meg768/rpi-ws281x#readme"
+  "homepage": "https://github.com/meg768/rpi-ws281x#readme",
+  "devDependencies": {
+    "@types/node": "^14.0.13",
+    "typescript": "^3.9.5"
+  }
 }
