@@ -191,7 +191,7 @@ NAN_METHOD(Addon::render)
 		return Nan::ThrowError("Size of pixels does not match, should be " << expected1);
 
     uint32_t expected2 = 4 * ws2811.channel[0].count;
-    if ((uint32_t)(mapping->Buffer()->GetContents().ByteLength()) != expected2
+    if ((uint32_t)(mapping->Buffer()->GetContents().ByteLength()) != expected2)
 		return Nan::ThrowError("Size of pixel mapping does not match, should be " << expected2);
 
     uint32_t *pixels = (uint32_t *)array->Buffer()->GetContents().Data();
