@@ -16,8 +16,8 @@ export interface IWS281xConfig {
 
 
 export class WS281x {
-    public map: Uint32Array;
-    public leds: number;
+    public map!: Uint32Array;
+    public leds!: number;
 
     constructor() {
     }
@@ -29,7 +29,7 @@ export class WS281x {
             if (!width) {
                 throw new Error('Must specify width > 0 if height is specified.');
             }
-            if (height) {
+            if (!height) {
                 throw new Error('Must specify height > 0 if width is specified.');
             }
             if (leds) {

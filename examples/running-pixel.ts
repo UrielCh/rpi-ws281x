@@ -1,4 +1,5 @@
 import {WS281x, IWS281xConfig} from '../index';
+
 const ws281x = new WS281x();
 
 function toColor(composant: {r?:number, g?: number, b?:number, w?: number}) {
@@ -8,7 +9,7 @@ function toColor(composant: {r?:number, g?: number, b?:number, w?: number}) {
 
 class Example {
     offset: number;
-    config: IWS281xConfig;
+    config: IWS281xConfig & {leds : number};
 
     constructor() {
         // Current pixel position
