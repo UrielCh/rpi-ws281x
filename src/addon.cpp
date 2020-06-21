@@ -102,15 +102,15 @@ NAN_METHOD(Addon::configure)
     if (true) {
         v8::Local<v8::Value> stripType = options->Get(Nan::New<v8::String>("type").ToLocalChecked());
 
-        if (stripType->IsUndefined()) 
+        if (stripType->IsUndefined())
             stripType = options->Get(Nan::New<v8::String>("strip").ToLocalChecked());
 
-        if (stripType->IsUndefined()) 
+        if (stripType->IsUndefined())
             stripType = options->Get(Nan::New<v8::String>("stripType").ToLocalChecked());
 
         if (!stripType->IsUndefined()) {
             v8::String::Utf8Value value(stripType->ToString());
-            string stripTypeValue = string(*value);        
+            string stripTypeValue = string(*value);
 
             if (stripTypeValue == "rgb") {
                 ws2811.channel[0].strip_type = WS2811_STRIP_RGB;
@@ -136,8 +136,6 @@ NAN_METHOD(Addon::configure)
                 ws2811.channel[0].strip_type = SK6812_STRIP_BRGW;
             } else if (stripTypeValue == "brgw") {
                 ws2811.channel[0].strip_type = SK6812_STRIP_BGRW;
-            } else if (stripTypeValue == "bgrw") {
-                ws2811.channel[0].strip_type = ;
             } else {
                return Nan::ThrowTypeError("unsuported type led.");
             }
@@ -187,12 +185,18 @@ NAN_METHOD(Addon::render)
     v8::Local<v8::Uint32Array> mapping = info[1].As<v8::Uint32Array>();
 
     uint32_t expected1 = 4 * ws2811.channel[0].count;
-    if ((uint32_t)(array->Buffer()->GetContents().ByteLength()) != expected)
-		return Nan::ThrowError("Size of pixels does not match, should be " << expected1);
+    if ((uint32_t)(array->Buffer()->GetContents().ByteLength()) != expected1) {
+	std::ostringstream errortext;
+        errortext << "Size of pixels does not match, should be " << expected1;
+        return Nan::ThrowError(errortext.str().c_str());
+    }
 
     uint32_t expected2 = 4 * ws2811.channel[0].count;
-    if ((uint32_t)(mapping->Buffer()->GetContents().ByteLength()) != expected2)
-		return Nan::ThrowError("Size of pixel mapping does not match, should be " << expected2);
+    if ((uint32_t)(mapping->Buffer()->GetContents().ByteLength()) != expected2) {
+	 std::ostringstream errortext;
+         errortext << "Size of pixel mapping does not match, should be " << expected2;
+	 return Nan::ThrowError(errortext.str().c_str());
+    }
 
     uint32_t *pixels = (uint32_t *)array->Buffer()->GetContents().Data();
     uint32_t *map = (uint32_t *)mapping->Buffer()->GetContents().Data();
