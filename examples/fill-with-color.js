@@ -18,9 +18,9 @@ class Example {
         this.config.gpio = 18;
 
         // The RGB sequence may vary on some strips. Valid values
-        // are "rgb", "rbg", "grb", "gbr", "bgr", "brg".
+        // are "rgb", "rbg", "grb", "gbr", "bgr", "brg"
+        // and "rgbw", "rbgw", "grbw", "grbw", "gbrw", "brgw", "bgrw" for SK6812 STRIP
         // Default is "rgb".
-        // RGBW strips are not currently supported.
         this.config.strip = 'grb';
 
         // Configure ws281x
@@ -30,13 +30,13 @@ class Example {
     run() {
         // Create a pixel array matching the number of leds.
         // This must be an instance of Uint32Array.
-        var pixels = new Uint32Array(this.config.leds);
+        const pixels = new Uint32Array(this.config.leds);
 
         // Create a fill color with red/green/blue.
-        var red = 255, green = 0, blue = 0;
-        var color = (red << 16) | (green << 8)| blue;
+        const red = 255, green = 0, blue = 0;
+        const color = (red << 16) | (green << 8)| blue;
 
-        for (var i = 0; i < this.config.leds; i++)
+        for (let i = 0; i < this.config.leds; i++)
             pixels[i] = color;
 
         // Render to strip

@@ -55,18 +55,15 @@ NAN_METHOD(Addon::configure)
     ws2811.channel[1].brightness = 0;
     ws2811.channel[1].strip_type = 0;
 
-
 	if (info.Length() != 1 ) {
 		return Nan::ThrowError("configure requires an argument.");
 	}
 
 	v8::Local<v8::Object> options = v8::Local<v8::Object>::Cast(info[0]);
 
-    ///////////////////////////////////////////////////////////////////////////
     // debug
     v8::Local<v8::Value> debug = options->Get(Nan::New<v8::String>("debug").ToLocalChecked());
 
-    ///////////////////////////////////////////////////////////////////////////
     // leds
     if (true) {
         v8::Local<v8::Value> leds = options->Get(Nan::New<v8::String>("leds").ToLocalChecked());
@@ -77,7 +74,6 @@ NAN_METHOD(Addon::configure)
             return Nan::ThrowTypeError("configure(): leds must be defined");
     }
 
-    ///////////////////////////////////////////////////////////////////////////
     // dma
     if (true) {
         v8::Local<v8::Value> dma = options->Get(Nan::New<v8::String>("dma").ToLocalChecked());
@@ -86,7 +82,6 @@ NAN_METHOD(Addon::configure)
             ws2811.dmanum = Nan::To<int>(dma).FromMaybe(ws2811.dmanum);
     }
 
-    ///////////////////////////////////////////////////////////////////////////
     // gpio
     if (true) {
         v8::Local<v8::Value> gpio = options->Get(Nan::New<v8::String>("gpio").ToLocalChecked());
@@ -95,7 +90,6 @@ NAN_METHOD(Addon::configure)
             ws2811.channel[0].gpionum = Nan::To<int>(gpio).FromMaybe(ws2811.channel[0].gpionum);
     }
 
-    ///////////////////////////////////////////////////////////////////////////
     // brightness
     if (true) {
         v8::Local<v8::Value> brightness = options->Get(Nan::New<v8::String>("brightness").ToLocalChecked());
@@ -104,7 +98,6 @@ NAN_METHOD(Addon::configure)
             ws2811.channel[0].brightness = Nan::To<int>(brightness).FromMaybe(ws2811.channel[0].brightness);
     }
 
-    ///////////////////////////////////////////////////////////////////////////
     // stripType/strip/type
     if (true) {
         v8::Local<v8::Value> stripType = options->Get(Nan::New<v8::String>("type").ToLocalChecked());
@@ -121,23 +114,33 @@ NAN_METHOD(Addon::configure)
 
             if (stripTypeValue == "rgb") {
                 ws2811.channel[0].strip_type = WS2811_STRIP_RGB;
-            }
-            if (stripTypeValue == "rbg") {
+            } else if (stripTypeValue == "rbg") {
                 ws2811.channel[0].strip_type = WS2811_STRIP_RBG;
-            }
-            if (stripTypeValue == "grb") {
+            } else if (stripTypeValue == "grb") {
                 ws2811.channel[0].strip_type = WS2811_STRIP_GRB;
-            }
-            if (stripTypeValue == "gbr") {
+            } else if (stripTypeValue == "gbr") {
                 ws2811.channel[0].strip_type = WS2811_STRIP_GBR;
-            }
-            if (stripTypeValue == "brg") {
+            } else if (stripTypeValue == "brg") {
                 ws2811.channel[0].strip_type = WS2811_STRIP_BRG;
-            }
-            if (stripTypeValue == "bgr") {
+            } else if (stripTypeValue == "bgr") {
                 ws2811.channel[0].strip_type = WS2811_STRIP_BGR;
+            } else if (stripTypeValue == "rgbw") {
+                ws2811.channel[0].strip_type = SK6812_STRIP_RGBW;
+            } else if (stripTypeValue == "rbgw") {
+                ws2811.channel[0].strip_type = SK6812_STRIP_RBGW;
+            } else if (stripTypeValue == "grbw") {
+                ws2811.channel[0].strip_type = SK6812_STRIP_GRBW;
+            } else if (stripTypeValue == "grbw") {
+                ws2811.channel[0].strip_type = SK6812_STRIP_GBRW;
+            } else if (stripTypeValue == "gbrw") {
+                ws2811.channel[0].strip_type = SK6812_STRIP_BRGW;
+            } else if (stripTypeValue == "brgw") {
+                ws2811.channel[0].strip_type = SK6812_STRIP_BGRW;
+            } else if (stripTypeValue == "bgrw") {
+                ws2811.channel[0].strip_type = ;
+            } else {
+               return Nan::ThrowTypeError("unsuported type led.");
             }
-
         }
         else {
             ws2811.channel[0].strip_type = WS2811_STRIP_RGB;
@@ -154,22 +157,16 @@ NAN_METHOD(Addon::configure)
 	info.GetReturnValue().Set(Nan::Undefined());
 };
 
-
 NAN_METHOD(Addon::reset)
 {
 	Nan::HandleScope();
-
-
     if (ws2811.freq != 0) {
         memset(ws2811.channel[0].leds, 0, sizeof(uint32_t) * ws2811.channel[0].count);
         ws2811_render(&ws2811);
         ws2811_fini(&ws2811);
     }
-
     ws2811.freq = 0;
-
     info.GetReturnValue().Set(Nan::Undefined());
-
 }
 
 NAN_METHOD(Addon::render)
@@ -189,12 +186,13 @@ NAN_METHOD(Addon::render)
     v8::Local<v8::Uint32Array> array = info[0].As<v8::Uint32Array>();
     v8::Local<v8::Uint32Array> mapping = info[1].As<v8::Uint32Array>();
 
-    
-    if ((uint32_t)(array->Buffer()->GetContents().ByteLength()) != (uint32_t)(4 * ws2811.channel[0].count))
-		return Nan::ThrowError("Size of pixels does not match.");
+    uint32_t expected1 = 4 * ws2811.channel[0].count;
+    if ((uint32_t)(array->Buffer()->GetContents().ByteLength()) != expected)
+		return Nan::ThrowError("Size of pixels does not match, should be " << expected1);
 
-    if ((uint32_t)(mapping->Buffer()->GetContents().ByteLength()) != (uint32_t)(4 * ws2811.channel[0].count))
-		return Nan::ThrowError("Size of pixel mapping does not match.");
+    uint32_t expected2 = 4 * ws2811.channel[0].count;
+    if ((uint32_t)(mapping->Buffer()->GetContents().ByteLength()) != expected2
+		return Nan::ThrowError("Size of pixel mapping does not match, should be " << expected2);
 
     uint32_t *pixels = (uint32_t *)array->Buffer()->GetContents().Data();
     uint32_t *map = (uint32_t *)mapping->Buffer()->GetContents().Data();
@@ -207,19 +205,14 @@ NAN_METHOD(Addon::render)
     ws2811_render(&ws2811);
 
 	info.GetReturnValue().Set(Nan::Undefined());
-
 };
 
 NAN_METHOD(Addon::sleep)
 {
 	Nan::HandleScope();
-
     usleep(info[0]->Int32Value() * 1000);
-
     info.GetReturnValue().Set(Nan::Undefined());
-
 }
-
 
 NAN_MODULE_INIT(initAddon)
 {
@@ -228,6 +221,5 @@ NAN_MODULE_INIT(initAddon)
 	Nan::SetMethod(target, "reset",      Addon::reset);
 	Nan::SetMethod(target, "sleep",      Addon::sleep);
 }
-
 
 NODE_MODULE(addon, initAddon);
