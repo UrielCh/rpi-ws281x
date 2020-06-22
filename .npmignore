@@ -1,0 +1,8 @@
+src/
+examples/
+build/Release/obj.target/
+build/Release/.deps/
+build/binding.Makefile
+binding.gyp
+makefile
+build/rpi-ws281x.target.mk

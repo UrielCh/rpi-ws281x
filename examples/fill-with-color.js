@@ -1,7 +1,7 @@
 const ws281x = require('../index.js');
 const Color = require('color');
 
-const { toColor, asRGB } = require ('./common.js');
+const { toColor, asRGB, useWhite} = require ('./common.js');
 
 /**
  * @typedef {Object} colorData
@@ -35,17 +35,10 @@ class Example {
         const delta = 360 / leds;
         let c0 = Color(courceColor);
         for (let i = 0; i < leds; i++) {
-            const c2 = c0.rotate(offset + i * delta);
-            let {r,g,b} = c2.rgb().object();
-            const w = Math.min(r,g,b);
-            if (w) {
-                r -= w;
-                b -= w;
-                r -= w;
-            }
-
-            let color = toColor({r, g, b, w}); //  as composantColor
-            this.pixels[i] = color;
+            const c2 = c0.rotate(offset + i * delta).rgb().object();
+            useWhite(c2);
+            // console.log(c2);
+            this.pixels[i] = toColor(c2);
         }
         // Render to strip
         ws281x.render(this.pixels);
@@ -66,35 +59,34 @@ class Example {
     ringLoop() {
         let offset = 0;
             setInterval(() => {
-                offset++;
-                this.drawRing({r:128, g:128, b:20}, offset);             
+                offset+=2;
+                this.drawRing({r:255, g:255, b:60}, offset);             
             }, 30);
     }
 
     run() {
         // Create a fill color with red/green/blue.
-        // this.ringLoop();
         
         this.setColor({r:0, g:255, b:0});
         ws281x.render(this.pixels);
         console.log('Should Be Green');
-        ws281x.sleep(1000);
+        ws281x.sleep(350);
 
         this.setColor({r:255});
         ws281x.render(this.pixels);
         console.log('Should Be Red');
-        ws281x.sleep(1000);
+        ws281x.sleep(350);
 
         this.setColor({b:255});
         ws281x.render(this.pixels);
         console.log('Should Be Blue');
-        ws281x.sleep(1000);
-
+        ws281x.sleep(350);
 
         this.setColor({});
         ws281x.render(this.pixels);
         console.log('Should Be OFF');
-
+        ws281x.sleep(200);
+        this.ringLoop();
     }
 };
 

@@ -51,26 +51,15 @@ var ws281x = require('rpi-ws281x');
 class Example {
 
     constructor() {
-        this.config = {};
-
-        // Number of leds in my strip
-        this.config.leds = 169;
-
-        // Use DMA 10 (default 10)
-        this.config.dma = 10;
-
-        // Set full brightness, a value from 0 to 255 (default 255)
-        this.config.brightness = 255;
-
-        // Set the GPIO number to communicate with the Neopixel strip (default 18)
-        this.config.gpio = 18;
-
-        // The RGB sequence may vary on some strips. Valid values
-        // are "rgb", "rbg", "grb", "gbr", "bgr", "brg".
-        // Default is "rgb".
-        // RGBW strips are not currently supported.
-        this.config.type = 'grb';
-
+        this.config = {
+            leds: 169, // Number of leds in my strip
+            dma: 10, // Use DMA 10 (default 10)
+            brightness: 255, // Set full brightness, a value from 0 to 255 (default 255)
+            gpio: 18, // Set the GPIO number to communicate with the Neopixel strip (default 18)
+            type: 'grb', // The RGB sequence may vary on some strips. Valid values
+            // are "rgb", "rbg", "grb", "gbr", "bgr", "brg", "rgbw", "rbgw", "grbw", "grbw", "gbrw", "brgw", "bgrw"
+            // Default is "rgb".
+        };
         // Configure ws281x
         ws281x.configure(this.config);
     }
@@ -82,7 +71,7 @@ class Example {
 
         // Create a fill color with red/green/blue.
         var red = 255, green = 0, blue = 0;
-        var color = (red << 16) | (green << 8)| blue;
+        var color = (red << 16) | (green << 8) | blue;
 
         for (var i = 0; i < this.config.leds; i++)
             pixels[i] = color;
@@ -111,7 +100,7 @@ class Example {
         this.offset = 0;
 
         // Set my Neopixel configuration
-        this.config = {leds:169};
+        this.config = {leds: 169};
 
         // Configure ws281x
         ws281x.configure(this.config);

@@ -29,4 +29,19 @@ function asRGB(object) {
     }
 }
 
-module.exports = { toColor, asRGB };
+/**
+ * 
+ * @param {composantColor} c2 
+ */
+function useWhite(c2) {
+    let {r,g,b} = c2;
+    const w = Math.min(r,g,b);
+    if (!w)
+        return;
+    r -= w;
+    g -= w;
+    b -= w;
+    c2.w = w;
+}
+
+module.exports = { toColor, asRGB, useWhite };
