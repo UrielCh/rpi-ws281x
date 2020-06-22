@@ -13,4 +13,20 @@ function toColor(composant) {
     return (w << 24) | (r << 16) | (g << 8) | b;
 }
 
+/**
+ * 
+ * @param {composantColor} object 
+ */
+function asRGB(object) {
+    if (!object.r) {
+        object.r = 0;
+    }
+    if (!object.g) {
+        object.g = 0;
+    }
+    if (!object.b) {
+        object.b = 0;
+    }
+}
+
 module.exports = { toColor };

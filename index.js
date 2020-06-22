@@ -13,7 +13,6 @@ const addon = require('bindings')('rpi-ws281x');
 //     strip?: "rgb" | "rbg" | "grb" | "gbr" | "bgr" | "brg" |  "rgbw" | "rbgw" | "grbw" | "grbw" | "gbrw" | "brgw" | "bgrw";
 // }
 
-
 /**
  * @typedef {Object} IWS281xConfig
  * @property {number} [leds] - 
@@ -22,7 +21,6 @@ const addon = require('bindings')('rpi-ws281x');
  * @property {number} [gpio] - 
  * @property {string} [strip] - {"rgb" | "rbg" | "grb" | "gbr" | "bgr" | "brg" |  "rgbw" | "rbgw" | "grbw" | "grbw" | "gbrw" | "brgw" | "bgrw"}
  */
-
 
 class WS281x {
     // public map!: Uint32Array;

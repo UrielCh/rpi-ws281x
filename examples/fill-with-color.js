@@ -1,12 +1,20 @@
 const ws281x = require('../index.js');
 const Color = require('color');
 
-const { toColor } = require ('./common.js');
+const { toColor, asRGB } = require ('./common.js');
+
+/**
+ * @typedef {Object} colorData
+ * @property {number} [r] - 
+ * @property {number} [g] - 
+ * @property {number} [b] - 
+ * @property {number} [a] - 
+ */
 
 class Example {
     constructor() {
         this.config = {
-            leds: 24,
+            leds: 126,
             dma: 10,
             brightness: 255,
             gpio: 18,
@@ -14,58 +22,79 @@ class Example {
         };
         // Configure ws281x
         ws281x.configure(this.config);
+        this.pixels = new Uint32Array(this.config.leds);
+    }
+
+    /**
+     * @param {colorData} courceColor 
+     * @param {number} offset 
+     */
+    drawRing(courceColor, offset) {
+        asRGB(courceColor);
+        const leds = this.config.leds;// as number;
+        const delta = 360 / leds;
+        let c0 = Color(courceColor);
+        for (let i = 0; i < leds; i++) {
+            const c2 = c0.rotate(offset + i * delta);
+            let {r,g,b} = c2.rgb().object();
+            const w = Math.min(r,g,b);
+            if (w) {
+                r -= w;
+                b -= w;
+                r -= w;
+            }
+
+            let color = toColor({r, g, b, w}); //  as composantColor
+            this.pixels[i] = color;
+        }
+        // Render to strip
+        ws281x.render(this.pixels);
+    }
+
+    /**
+     * @param {colorData} color 
+     */
+    setColor(color) {
+        const leds = this.config.leds;// as number;
+        const color2 = toColor(color); //  as composantColor
+        for (let i = 0; i < leds; i++) {
+            this.pixels[i] = color2;
+        }
+        ws281x.render(this.pixels);
+    }
+
+    ringLoop() {
+        let offset = 0;
+            setInterval(() => {
+                offset++;
+                this.drawRing({r:128, g:128, b:20}, offset);             
+            }, 30);
     }
 
     run() {
-        // Create a pixel array matching the number of leds.
-        // This must be an instance of Uint32Array.
-        const leds = this.config.leds;// as number;
-        const pixels = new Uint32Array(leds);
-
-
         // Create a fill color with red/green/blue.
-        {
-            
-            let c0 = Color({r:255});
-            console.log('Should Be RED');
-            for (let i = 0; i < leds; i++) {
-                const c2 = c0.rotate(i);
-                let color = toColor(c2.object()); //  as composantColor
-                pixels[i] = color;
-            }
-            // Render to strip
-            ws281x.render(pixels);
-        }
+        // this.ringLoop();
+        
+        this.setColor({r:0, g:255, b:0});
+        ws281x.render(this.pixels);
+        console.log('Should Be Green');
         ws281x.sleep(1000);
 
-        // Create a fill color with red/green/blue.
-        // let color = toColor({g:255})
-        // console.log('Should Be Green');
-        // for (let i = 0; i < this.config.leds; i++)
-        //     pixels[i] = color;
-        // // Render to strip
-        // ws281x.render(pixels);
-        // ws281x.sleep(1000);
-// 
-// 
-        // // Create a fill color with red/green/blue.
-        // color = toColor({b:255})
-        // console.log('Should Be Blue');
-        // for (let i = 0; i < this.config.leds; i++)
-        //     pixels[i] = color;
-        // // Render to strip
-        // ws281x.render(pixels);
-        // ws281x.sleep(1000);
-// 
-// 
-        // // Create a fill color with red/green/blue.
-        // color = toColor({w:255})
-        // console.log('Should Be white');
-        // for (let i = 0; i < this.config.leds; i++)
-        //     pixels[i] = color;
-        // // Render to strip
-        // ws281x.render(pixels);
-        // ws281x.sleep(1000);
+        this.setColor({r:255});
+        ws281x.render(this.pixels);
+        console.log('Should Be Red');
+        ws281x.sleep(1000);
+
+        this.setColor({b:255});
+        ws281x.render(this.pixels);
+        console.log('Should Be Blue');
+        ws281x.sleep(1000);
+
+
+        this.setColor({});
+        ws281x.render(this.pixels);
+        console.log('Should Be OFF');
+
     }
 };
 

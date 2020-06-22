@@ -2,14 +2,11 @@ const ws281x = require('../index.js');
 const { toColor } = require('./common.js');
 
 class Example {
-    // offset: number;
-    // config: IWS281xConfig & {width: number, height: number, map: string};
     constructor() {
         // Current pixel position
         this.offset = 0;
 
         // Set my Neopixel configuration
-
         // By setting width and height instead of number of leds
         // you may use named pixel mappings.
         // Currently "matrix" and "alternating-matrix" are
