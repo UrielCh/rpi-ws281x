@@ -1,14 +1,9 @@
-import {WS281x, IWS281xConfig} from '../index';
-const ws281x = new WS281x();
-
-function toColor(composant: {r?:number, g?: number, b?:number, w?: number}) {
-    const {r=0,g=0,b=0,w=0} = composant;
-    return (w << 24) | (r << 16) | (g << 8) | b;
-}
+const ws281x = require('../index.js');
+const { toColor } = require('./common.js');
 
 class Example {
-    offset: number;
-    config: IWS281xConfig & {width: number, height: number, map: string};
+    // offset: number;
+    // config: IWS281xConfig & {width: number, height: number, map: string};
     constructor() {
         // Current pixel position
         this.offset = 0;

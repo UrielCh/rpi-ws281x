@@ -13,7 +13,6 @@ static ws2811_t ws2811;
 NAN_METHOD(Addon::configure)
 {
 	Nan::HandleScope();
-
     // http://rgb-123.com/ws2812-color-output
     static uint8_t gammaCorrection[256] = {
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -220,6 +219,11 @@ NAN_METHOD(Addon::sleep)
 
 NAN_MODULE_INIT(initAddon)
 {
+    // Nan::Set(target, Nan::New("configure").ToLocalChecked(), Nan::GetFunction(Nan::New<FunctionTemplate>(Addon::configure)).ToLocalChecked());
+    // Nan::Set(target, Nan::New("render").ToLocalChecked(), Nan::GetFunction(Nan::New<FunctionTemplate>(Addon::render)).ToLocalChecked());
+    // Nan::Set(target, Nan::New("reset").ToLocalChecked(), Nan::GetFunction(Nan::New<FunctionTemplate>(Addon::reset)).ToLocalChecked());
+    // Nan::Set(target, Nan::New("sleep").ToLocalChecked(), Nan::GetFunction(Nan::New<FunctionTemplate>(Addon::sleep)).ToLocalChecked());
+
 	Nan::SetMethod(target, "configure",  Addon::configure);
 	Nan::SetMethod(target, "render",     Addon::render);
 	Nan::SetMethod(target, "reset",      Addon::reset);

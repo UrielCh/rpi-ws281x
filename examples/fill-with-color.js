@@ -1,23 +1,9 @@
-import {WS281x, IWS281xConfig} from '../index';
-import Color from "color";
+const ws281x = require('../index.js');
+const Color = require('color');
 
-const ws281x = new WS281x();
-
-interface composantColor {
-    r?: number;
-    g?: number;
-    b?: number;
-    w?: number;
-}
-
-
-function toColor(composant: composantColor) {
-    const {r=0,g=0,b=0,w=0} = composant;
-    return (w << 24) | (r << 16) | (g << 8) | b;
-}
+const { toColor } = require ('./common.js');
 
 class Example {
-    public config: IWS281xConfig;
     constructor() {
         this.config = {
             leds: 24,
@@ -33,7 +19,7 @@ class Example {
     run() {
         // Create a pixel array matching the number of leds.
         // This must be an instance of Uint32Array.
-        const leds = this.config.leds as number;
+        const leds = this.config.leds;// as number;
         const pixels = new Uint32Array(leds);
 
 
@@ -44,7 +30,7 @@ class Example {
             console.log('Should Be RED');
             for (let i = 0; i < leds; i++) {
                 const c2 = c0.rotate(i);
-                let color = toColor(c2.object() as composantColor);
+                let color = toColor(c2.object()); //  as composantColor
                 pixels[i] = color;
             }
             // Render to strip

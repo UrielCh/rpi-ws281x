@@ -9,7 +9,6 @@ library from **jgarff** https://github.com/jgarff/rpi_ws281x.
 $ npm install rpi-ws281x --save
 ````
 
-
 ## Usage
 
 ````javascript

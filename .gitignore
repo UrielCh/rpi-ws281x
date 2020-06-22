@@ -35,8 +35,3 @@ build
 *.exe
 *.out
 *.app
-
-
-
-index.js
-examples/*.js

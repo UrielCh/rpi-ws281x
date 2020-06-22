@@ -1,28 +1,48 @@
-import path from 'path';
+// import path from 'path';
+const addon = require('bindings')('rpi-ws281x');
 
-const addon = require(path.join(__dirname, "build", "Release", "rpi-ws281x.node"));
-
-export interface IWS281xConfig {
-    leds?: number; // Number of leds in my strip
-    dma?: number; // Use DMA 10 (default 10)
-    brightness?: number; // Set full brightness, a value from 0 to 255 (default 255)
-    gpio?: number; // Set the GPIO number to communicate with the Neopixel strip (default 18)
-    // The RGB sequence may vary on some strips. Valid values
-    // are "rgb", "rbg", "grb", "gbr", "bgr", "brg"
-    // and "rgbw", "rbgw", "grbw", "grbw", "gbrw", "brgw", "bgrw" for SK6812 STRIP
-    // Default is "rgb".
-    strip?: "rgb" | "rbg" | "grb" | "gbr" | "bgr" | "brg" |  "rgbw" | "rbgw" | "grbw" | "grbw" | "gbrw" | "brgw" | "bgrw";
-}
+// export interface IWS281xConfig {
+//     leds?: number; // Number of leds in my strip
+//     dma?: number; // Use DMA 10 (default 10)
+//     brightness?: number; // Set full brightness, a value from 0 to 255 (default 255)
+//     gpio?: number; // Set the GPIO number to communicate with the Neopixel strip (default 18)
+//     // The RGB sequence may vary on some strips. Valid values
+//     // are "rgb", "rbg", "grb", "gbr", "bgr", "brg"
+//     // and "rgbw", "rbgw", "grbw", "grbw", "gbrw", "brgw", "bgrw" for SK6812 STRIP
+//     // Default is "rgb".
+//     strip?: "rgb" | "rbg" | "grb" | "gbr" | "bgr" | "brg" |  "rgbw" | "rbgw" | "grbw" | "grbw" | "gbrw" | "brgw" | "bgrw";
+// }
 
 
-export class WS281x {
-    public map!: Uint32Array;
-    public leds!: number;
+/**
+ * @typedef {Object} IWS281xConfig
+ * @property {number} [leds] - 
+ * @property {number} [dma] - 
+ * @property {number} [brightness] - 
+ * @property {number} [gpio] - 
+ * @property {string} [strip] - {"rgb" | "rbg" | "grb" | "gbr" | "bgr" | "brg" |  "rgbw" | "rbgw" | "grbw" | "grbw" | "gbrw" | "brgw" | "bgrw"}
+ */
+
+
+class WS281x {
+    // public map!: Uint32Array;
+    // public leds!: number;
 
     constructor() {
+        /**
+         * @type {Uint32Array | undefined}
+         */
+        this.map  = undefined;
+        /**
+         * @type {number | undefined}
+         */
+        this.leds = undefined;
     }
-
-    configure(options: IWS281xConfig & {width?: number, height?: number, map?: string | Uint32Array, leds?: number}) {
+    /**
+     * 
+     * @param {IWS281xConfig & {width?: number, height?: number, map?: string | Uint32Array, leds?: number}} options 
+     */
+    configure(options) {
         var {width, height, map, leds} = options;
         // , ...options
         if (width || height) {
@@ -87,12 +107,18 @@ export class WS281x {
             addon.reset();
         }
     }
-
-    sleep(ms: number) {
+    /**
+     * 
+     * @param {number} ms 
+     */
+    sleep(ms) {
         addon.sleep(ms);
     }
-
-    render(pixels: Buffer | Uint32Array) {
+    /**
+     * 
+     * @param {Buffer | Uint32Array} pixels 
+     */
+    render(pixels) {
         if (this.map != undefined) {
             // Convert to Uint32Array if a Buffer
             if (pixels instanceof Buffer)
