@@ -13,6 +13,7 @@
   },
   "typings": "index.d.ts",
   "keywords": [
+    "sk6812",
     "ws2811",
     "ws2812",
     "ws281x",

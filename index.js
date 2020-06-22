@@ -128,5 +128,4 @@ class WS281x {
     }
 }
 
-
 module.exports = new WS281x();
