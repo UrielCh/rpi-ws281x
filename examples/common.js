@@ -29,4 +29,4 @@ function asRGB(object) {
     }
 }
 
-module.exports = { toColor };
+module.exports = { toColor, asRGB };

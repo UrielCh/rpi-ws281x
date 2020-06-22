@@ -11,6 +11,7 @@
     "git-revert": "make git-revert",
     "npm-publish": "make npm-publish"
   },
+  "typings": "index.d.ts",
   "keywords": [
     "ws2811",
     "ws2812",
